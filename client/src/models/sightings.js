@@ -13,6 +13,9 @@ Sightings.prototype.bindEvents = function () {
 
   // subscribe to submit event from form view
   //  calls post function
+  PubSub.subscribe("SightingFormView:submit-bird", (evt) =>{
+    this.postBird(evt.detail)
+  });
 
 };
 
@@ -20,6 +23,15 @@ Sightings.prototype.bindEvents = function () {
 // new up a request object with helper url
 // call the post request function
 // then publish the returned data
+
+Sightings.prototype.postBird = function(bird) {
+  this.request.post(bird)
+    .then((birds) => {
+      PubSub.publish('Sightings:data-loaded', birds)
+      console.log(birds);
+    })
+    .catch(console.error);
+}
 
 Sightings.prototype.getData = function () {
   this.request.get()
